@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  directus:
+    image: directus/directus:latest
+    ports:
+      - "8055:8055"  # Expose Directus on localhost:8055
+    # volumes:
+    #  - ./directus:/directus
+    environment:
+      DIRECTUS_DATABASE_HOST: db
+      DIRECTUS_DATABASE_PORT: 3306
+      DIRECTUS_DATABASE_NAME: directus_db
+      DIRECTUS_DATABASE_USER: directus
+      DIRECTUS_DATABASE_PASSWORD: directus_db_password
+      ADMIN_EMAIL: miakassissa.os@gmail.com
+      ADMIN_PASSWORD: directus_admin_password
+      DIRECTUS_APP_URL: http://localhost:8055
+      PUBLIC_URL: http://localhost:8055
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "http://localhost:3000"
+      SECRET: "AufR1rrBId5wd9F0/IA4FbpJAI0PwbpqKohg19fM1dI="
+    depends_on:
+      - db
+    volumes:
+      - directus_uploads:/directus/uploads # Named volume for file uploads
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: directus_db
+      MYSQL_USER: directus
+      MYSQL_PASSWORD: directus_db_password
+    volumes:
+      - db_data:/var/lib/mysql # Named volume for MySQL data
+
+volumes:
+  db_data: # Named volume for MySQL database
+  directus_uploads: # Named volume for Directus file uploads
+
